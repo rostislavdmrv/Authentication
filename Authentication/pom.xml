@@ -30,6 +30,7 @@
         <java.version>21</java.version>
         <swagger.version>2.6.0</swagger.version>
         <json-patch>1.13</json-patch>
+        <vavr.version>0.10.4</vavr.version>
         <flattenpomversion>1.2.7</flattenpomversion>
     </properties>
 
@@ -48,6 +49,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
         </dependency>
 
 
