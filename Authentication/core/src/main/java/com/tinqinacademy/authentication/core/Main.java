@@ -1,4 +1,4 @@
-package com.tinqinacademy.authentication;
+package com.tinqinacademy.authentication.core;
 
 public class Main {
     public static void main(String[] args) {

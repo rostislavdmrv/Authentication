@@ -14,7 +14,6 @@
     <version>${revision}</version>
 
     <dependencies>
-
         <dependency>
             <groupId>com.tinqinacademy.authentication.api</groupId>
             <artifactId>api</artifactId>
