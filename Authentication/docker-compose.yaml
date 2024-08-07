@@ -1,0 +1,22 @@
+version: '3.9'
+
+networks:
+  net1:
+
+services:
+  db:
+    container_name: rostislav-auth-db
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: rostislav11
+      POSTGRES_USER: rostislav
+      POSTGRES_DB: authentication
+    volumes:
+      - db-data:/var/lib/postresql/data
+    networks:
+      - net1
+
+volumes:
+  db-data:
