@@ -6,7 +6,9 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class LogInOutput  implements OperationOutput {
+    private String token;
 }
