@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.tinqinacademy.authentication")
-@EntityScan(basePackages = "com.tinqinacademy.authentication.persistence.model")
+@EntityScan(basePackages = "com.tinqinacademy.authentication.persistence.models")
 @EnableJpaRepositories(basePackages = "com.tinqinacademy.authentication.persistence.repositories")
-@SpringBootApplication
 public class AuthenticationApplication {
 
     public static void main(String[] args) {
