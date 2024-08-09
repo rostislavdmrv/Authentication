@@ -1,6 +1,7 @@
 package com.tinqinacademy.authentication.api.operations.demote;
 
 import com.tinqinacademy.authentication.api.base.OperationInput;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -10,5 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class DemoteInput implements OperationInput {
-    String userId;
+
+    @NotBlank(message = "User id  must not be blank!")
+    private String userId;
 }
