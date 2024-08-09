@@ -8,5 +8,5 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @Builder
-public class ConfirmationCodeOutput implements OperationOutput {
+public class ConfirmRegistrationOutput implements OperationOutput {
 }
