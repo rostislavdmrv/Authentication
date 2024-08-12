@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,21 +29,30 @@ public class User extends BaseEntity {
     @Column(name ="password",nullable = false)
     private String password;
 
+    @Column(name = "username",nullable = false,unique = true)
+    private String username;
+
     @Column(name = "first_name", nullable = false,length = 50)
     private String firstName;
 
     @Column(name = "last_name", nullable = false,length = 50)
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", nullable = false)
-    private RoleType role;
 
     @Column(name = "phone_number", nullable = false, length = 14)
     private String phoneNumber;
 
-    @Column(name = "birthdate", nullable = false)
-    private LocalDate birthdate;
+    @Column(name="is_verified", nullable = false)
+    private Boolean isVerified;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
+    )
+    private List<Role> roles = new ArrayList<>();
+
 
     @CreationTimestamp
     @Column(name = "created_at")

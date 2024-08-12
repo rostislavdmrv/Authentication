@@ -30,32 +30,11 @@ public class SecurityConfig {
                                 .requestMatchers( "/swagger-ui/**", "/login", "/register").permitAll()
                                 .anyRequest().permitAll()
 
-        ).formLogin(formLogin ->
-                        formLogin
-                                // Where is our custom login form?
-                                .loginPage("/users/login")
-                                // what is the name of the username parameter in the Login POST request?
-                                .usernameParameter("email")
-                                // what is the name of the password parameter in the Login POST request?
-                                .passwordParameter("password")
-                                // What will happen if the login is successful
-                                .defaultSuccessUrl("/", true)
-                                // What will happen if the login fails
-                                .failureForwardUrl("/users/login-error")
-                )
+        )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
-                .logout(
-                        logout ->
-                                logout
-                                        // what is the logout URL?
-                                        .logoutUrl("/users/logout")
-                                        // Where to go after successful logout?
-                                        .logoutSuccessUrl("/")
-                                        // invalidate the session after logout.
-                                        .invalidateHttpSession(true)
-                )
+
                 .build();
 
 

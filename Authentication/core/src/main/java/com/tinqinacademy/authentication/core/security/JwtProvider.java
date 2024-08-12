@@ -1,19 +1,17 @@
 package com.tinqinacademy.authentication.core.security;
-import com.tinqinacademy.authentication.api.exceptions.Messages;
+import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
-
-@Component
+@Service
 public class JwtProvider {
 
     @Value("${jwt.secret}")
@@ -22,50 +20,35 @@ public class JwtProvider {
     @Value("${jwt.duration-time}")
     private long expiration;
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .verifyWith(decodedKey())
-                    .build()
-                    .parse(token);
-            return true;
-        } catch (IllegalArgumentException | MalformedJwtException |
-                 UnsupportedJwtException | ExpiredJwtException e) {
-            return false;
-        }
+    public String createToken(String username, List<RoleType> roles) {
+        Date currentTime = new Date();
+        Date expireTime = new Date(currentTime.getTime() + this.expiration);
+
+        return Jwts.builder()
+                .claim("username", username)
+                .claim("roles", roles)
+                .issuedAt(currentTime)
+                .expiration(expireTime)
+                .signWith(decodedKey())
+                .compact();
     }
 
-    public String getUsername(String token){
-        Claims claims = Jwts.parser()
+    public String getUsernameFromToken(String token) {
+        return extractClaims(token).get("username", String.class);
+    }
+
+    public List<RoleType> getRolesFromToken(String token) {
+        return extractClaims(token).get("roles", ArrayList.class);
+    }
+
+    private Claims extractClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(decodedKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        return claims.getSubject();
     }
 
-    public String createToken(Authentication authentication) {
-        Date now = new Date();
-        Date expirityDate = new Date(now.getTime() + expiration);
-
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(Messages.NO_ASSIGNED_USER));
-
-        String token = Jwts.builder()
-                .subject(authentication.getName())
-                .issuedAt(now)
-                .claim("roles", role)
-                .claim("iat", now.getTime() / 1000)
-                .claim("exp", expirityDate.getTime() / 1000)
-                .expiration(expirityDate)
-                .signWith(decodedKey())
-                .compact();
-
-        return token;
-    }
     private SecretKey decodedKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

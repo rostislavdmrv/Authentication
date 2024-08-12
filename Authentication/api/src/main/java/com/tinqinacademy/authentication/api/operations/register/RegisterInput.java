@@ -18,7 +18,7 @@ public class RegisterInput implements OperationInput {
 
     @NotBlank(message = "Username must not be blank")
     @Size(min = 2, max = 30, message = "Username must be at least 2 characters in length")
-    @Schema(example = "ivan120")
+    @Schema(example = "burzia11")
     private String username;
 
     @NotBlank(message = "Password must not be blank")
@@ -28,17 +28,17 @@ public class RegisterInput implements OperationInput {
 
     @NotBlank(message = "First name must not be blank")
     @Size(min = 2, max = 30, message = "First name must be between 2 and 30 characters long")
-    @Schema(example = "Ivan")
+    @Schema(example = "Atanas")
     private String firstName;
 
     @NotBlank(message = "Last name must not be blank")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters long")
-    @Schema(example = "Petrov")
+    @Schema(example = "Hristov")
     private String lastName;
 
 
     @Email(message = "Invalid email format")
-    @Schema(example = "atanas.atanasov2005@outlook.com")
+    @Schema(example = "atanas.hristov2005@outlook.com")
     private String email;
 
     @NotBlank(message = "Phone number cannot be blank")
