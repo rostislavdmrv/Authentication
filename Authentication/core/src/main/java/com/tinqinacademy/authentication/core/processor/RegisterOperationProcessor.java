@@ -1,7 +1,7 @@
 package com.tinqinacademy.authentication.core.processor;
 
 import com.tinqinacademy.authentication.api.exceptions.AlreadyExistsException;
-import com.tinqinacademy.authentication.api.exceptions.Messages;
+import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.exceptions.UnknownRoleException;
 import com.tinqinacademy.authentication.api.models.errors.ErrorWrapper;
 import com.tinqinacademy.authentication.api.operations.register.RegisterInput;
@@ -9,7 +9,6 @@ import com.tinqinacademy.authentication.api.operations.register.RegisterOperatio
 import com.tinqinacademy.authentication.api.operations.register.RegisterOutput;
 import com.tinqinacademy.authentication.core.errorhandler.ErrorHandler;
 import com.tinqinacademy.authentication.core.processor.base.BaseOperationProcessor;
-import com.tinqinacademy.authentication.core.security.JwtProvider;
 import com.tinqinacademy.authentication.core.services.EmailConfirmationService;
 import com.tinqinacademy.authentication.persistence.models.entities.Role;
 import com.tinqinacademy.authentication.persistence.models.entities.User;
@@ -21,13 +20,10 @@ import io.vavr.control.Try;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j
