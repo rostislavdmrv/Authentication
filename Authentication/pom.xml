@@ -23,6 +23,7 @@
         <module>persistence</module>
         <module>domain</module>
         <module>rest</module>
+        <module>restexport</module>
     </modules>
 
     <properties>
@@ -114,6 +115,11 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
 
 
     </dependencies>

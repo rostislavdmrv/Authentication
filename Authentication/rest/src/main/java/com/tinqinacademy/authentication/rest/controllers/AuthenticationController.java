@@ -1,19 +1,26 @@
 package com.tinqinacademy.authentication.rest.controllers;
 
+import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordInput;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordOperation;
+import com.tinqinacademy.authentication.api.operations.changepasswordusingrecoverycode.ChangePasswordUsingRecoveryCodeInput;
+import com.tinqinacademy.authentication.api.operations.changepasswordusingrecoverycode.ChangePasswordUsingRecoveryCodeOperation;
 import com.tinqinacademy.authentication.api.operations.confirmregistration.ConfirmRegistrationInput;
 import com.tinqinacademy.authentication.api.operations.confirmregistration.ConfirmRegistrationOperation;
 import com.tinqinacademy.authentication.api.operations.demote.DemoteInput;
 import com.tinqinacademy.authentication.api.operations.demote.DemoteOperation;
 import com.tinqinacademy.authentication.api.operations.login.LogInInput;
 import com.tinqinacademy.authentication.api.operations.login.LogInOperation;
+import com.tinqinacademy.authentication.api.operations.logout.LogoutInput;
+import com.tinqinacademy.authentication.api.operations.logout.LogoutOperation;
 import com.tinqinacademy.authentication.api.operations.promote.PromoteInput;
 import com.tinqinacademy.authentication.api.operations.promote.PromoteOperation;
 import com.tinqinacademy.authentication.api.operations.recoverpassword.RecoverPasswordInput;
 import com.tinqinacademy.authentication.api.operations.recoverpassword.RecoverPasswordOperation;
 import com.tinqinacademy.authentication.api.operations.register.RegisterInput;
 import com.tinqinacademy.authentication.api.operations.register.RegisterOperation;
+import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtInput;
+import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtOperation;
 import com.tinqinacademy.authentication.api.restapiroutes.RestApiRoutes;
 import com.tinqinacademy.authentication.rest.controllers.base.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,8 +43,11 @@ public class AuthenticationController extends BaseController {
     private final RecoverPasswordOperation recoverPasswordOperation;
     private final ConfirmRegistrationOperation confirmRegistrationOperation;
     private final ChangePasswordOperation changePasswordOperation;
+    private final ChangePasswordUsingRecoveryCodeOperation changePasswordUsingRecoveryCodeOperation;
     private final PromoteOperation promoteOperation;
     private final DemoteOperation demoteOperation;
+    private final ValidateJwtOperation validateJwtOperation;
+    private final LogoutOperation logoutOperation;
 
 
     @Operation(
@@ -52,12 +63,12 @@ public class AuthenticationController extends BaseController {
     @PostMapping(RestApiRoutes.LOGIN)
     public ResponseEntity<?> logIn(@RequestBody LogInInput input) {
 
-        return handleWithStatus(loginOperation.process(input), HttpStatus.CREATED);
+        return handleWithJwt(loginOperation.process(input));
     }
 
 
     @Operation(
-            summary = "Register a new user",
+            summary = "Register a new User",
             description = "Processes the registration request for a new user. On successful registration, a new user account is created."
     )
     @ApiResponses(value = {
@@ -78,7 +89,7 @@ public class AuthenticationController extends BaseController {
             description = "Processes the request to recover a user's password. Sends a password recovery link or instructions to the user's email address."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK: Password recovery instructions have been sent to the user's email address."),
+            @ApiResponse(responseCode = "200", description = "Successful changed password!"),
             @ApiResponse(responseCode = "400", description = "Bad Request: The request payload is invalid or incomplete."),
             @ApiResponse(responseCode = "404", description = "Not Found: No user account associated with the provided email address.")
     })
@@ -89,6 +100,19 @@ public class AuthenticationController extends BaseController {
         return handleWithStatus(recoverPasswordOperation.process(input), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Change password via a recovery code",
+            description = "Changes the user password using a recovery code"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "OK: Password recovery instructions have been sent to the user's email address."),
+            @ApiResponse(responseCode = "400",description = "Invalid recovery code")
+    })
+    @PostMapping(RestApiRoutes.CHANGE_PASSWORD_USING_RECOVERY_CODE)
+    public ResponseEntity<?> changePasswordUsingRecoveryCode(@RequestBody ChangePasswordUsingRecoveryCodeInput input) {
+
+        return handleWithStatus(changePasswordUsingRecoveryCodeOperation.process(input), HttpStatus.OK);
+    }
 
 
     @Operation(
@@ -126,6 +150,26 @@ public class AuthenticationController extends BaseController {
         return handleWithStatus(changePasswordOperation.process(input), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Validates JWT",
+            description = "Returns user details if the token is valid"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Returns user details"),
+            @ApiResponse( responseCode = "400",description = "Invalid token")
+    })
+    @PostMapping(RestApiRoutes.VALIDATE_TOKEN)
+    public ResponseEntity<?> validateToken(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        //String authHeaderToken = authHeader.replace("Bearer ", "");
+
+        ValidateJwtInput input = ValidateJwtInput.builder()
+                .authorizationHeader(authHeader)
+                .build();
+
+
+        return handleWithStatus(validateJwtOperation.process(input), HttpStatus.OK);
+    }
+
 
     @Operation(
             summary = "Promote User",
@@ -145,7 +189,6 @@ public class AuthenticationController extends BaseController {
 
 
 
-
     @Operation(
             summary = "Demote User",
             description = "Processes the request to demote a user to a lower role or status within the system. The request should include necessary details to identify the user and the new role or status."
@@ -161,6 +204,21 @@ public class AuthenticationController extends BaseController {
     public ResponseEntity<?> demote(@RequestBody DemoteInput input) {
 
         return handleWithStatus(demoteOperation.process(input), HttpStatus.CREATED);
+    }
+
+    @Operation(
+            summary = "Logs out a user",
+            description = "Logs out a user and invalidates jwt"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Invalidates jwt and logs out"),
+            @ApiResponse(responseCode = "401",description = "Not authorized")
+    })
+    //@SecurityRequirement(name = "bearerAuth")
+    @PostMapping(RestApiRoutes.LOGOUT)
+    public ResponseEntity<?> logout() {
+
+        return handleWithStatus(logoutOperation.process(LogoutInput.builder().build()), HttpStatus.OK);
     }
 
 

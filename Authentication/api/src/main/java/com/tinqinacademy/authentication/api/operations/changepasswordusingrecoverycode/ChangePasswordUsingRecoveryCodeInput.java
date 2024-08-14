@@ -1,4 +1,4 @@
-package com.tinqinacademy.authentication.api.operations.changepassword;
+package com.tinqinacademy.authentication.api.operations.changepasswordusingrecoverycode;
 
 import com.tinqinacademy.authentication.api.base.OperationInput;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,19 +9,23 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChangePasswordInput implements OperationInput {
-    @NotBlank(message = "Old password must not be blank")
-    @Schema(example = "rosti1111;")
-    private String oldPassword;
-    @NotBlank(message = "New password must not be blank")
+@ToString
+public class ChangePasswordUsingRecoveryCodeInput implements OperationInput {
+
+    @NotBlank(message = "Recovery code cannot be blank")
+    @Schema(example = "-> Check your email <-")
+    private String recoveryCode;
+
+    @NotBlank(message = "New password cannot be blank")
     @Size(min = 8, message = "New password must be at least 8 characters in length")
-    @Schema(example = "newRosti11;")
+    @Schema(example = "sing1galena;")
     private String newPassword;
+
+    @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email format")
-    @Schema(example = "atanas.atanasov2005@gmail.com")
+    @Schema(example = "atanas.hristov@outlook.com")
     private String email;
 }

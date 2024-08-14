@@ -17,11 +17,11 @@ import java.util.UUID;
 @Builder
 @ToString
 @Entity
-@Table(name = "verification_codes")
-public class VerificationCode extends BaseEntity {
+@Table(name = "recovery_codes")
+public class RecoveryCode extends BaseEntity {
 
     @Column(name = "confirmation_code", nullable = false)
-    private String confirmationCode;
+    private String otp;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
@@ -29,6 +29,4 @@ public class VerificationCode extends BaseEntity {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-
 }
