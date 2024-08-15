@@ -6,6 +6,7 @@ import com.tinqinacademy.authentication.api.operations.promote.PromoteOperation;
 import com.tinqinacademy.authentication.api.operations.promote.PromoteOutput;
 import com.tinqinacademy.authentication.core.errorhandler.ErrorHandler;
 import com.tinqinacademy.authentication.core.processor.base.BaseOperationProcessor;
+import com.tinqinacademy.authentication.persistence.repositories.RoleRepository;
 import com.tinqinacademy.authentication.persistence.repositories.UserRepository;
 import io.vavr.control.Either;
 import jakarta.validation.Validator;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PromoteOperationProcessor extends BaseOperationProcessor<PromoteInput,PromoteOutput> implements PromoteOperation {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    protected PromoteOperationProcessor(ConversionService conversionService, Validator validator, ErrorHandler errorHandler, UserRepository userRepository) {
+    protected PromoteOperationProcessor(ConversionService conversionService, Validator validator, ErrorHandler errorHandler, UserRepository userRepository, RoleRepository roleRepository) {
         super(conversionService, validator, errorHandler);
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override

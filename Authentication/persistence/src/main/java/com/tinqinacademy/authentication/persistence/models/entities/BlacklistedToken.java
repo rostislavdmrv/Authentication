@@ -1,10 +1,12 @@
 package com.tinqinacademy.authentication.persistence.models.entities;
+
 import com.tinqinacademy.authentication.persistence.models.entities.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import java.time.Instant;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class BlacklistedToken extends BaseEntity {
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
-    @Column(name = "invalidation_time", nullable = false)
-    private Instant invalidationTime;
+    @CreationTimestamp
+    @Column(name = "created")
+    private LocalDateTime created;
 }

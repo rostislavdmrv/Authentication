@@ -18,6 +18,7 @@ import com.tinqinacademy.authentication.persistence.repositories.RecoveryCodeRep
 import com.tinqinacademy.authentication.persistence.repositories.UserRepository;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
@@ -40,6 +41,7 @@ public class ChangePasswordUsingRecoveryCodeOperationProcessor extends BaseOpera
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public Either<ErrorWrapper, ChangePasswordUsingRecoveryCodeOutput> process(ChangePasswordUsingRecoveryCodeInput input) {
         return Try.of(() -> {
