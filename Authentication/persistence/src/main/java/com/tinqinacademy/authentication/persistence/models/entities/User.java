@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,14 @@ public class User extends BaseEntity {
     @Column(name = "last_name", nullable = false,length = 50)
     private String lastName;
 
-
     @Column(name = "phone_number", nullable = false, length = 14)
     private String phoneNumber;
 
     @Column(name="is_verified", nullable = false)
     private Boolean isVerified;
+
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

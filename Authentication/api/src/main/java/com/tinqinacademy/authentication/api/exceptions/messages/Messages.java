@@ -12,4 +12,5 @@ public class Messages {
     public static final String NO_RECOVERY_REQUEST_FOUND = "No recovery request has been made for this email !";
     public static final String INVALID_RECOVERY_CODE = "Invalid recovery code!";
     public static final String INVALID_VERIFICATION_CODE = "Invalid verification code!";
+    public static final String TOKEN_EXPIRED = "JWT is expired";
 }

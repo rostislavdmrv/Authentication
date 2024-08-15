@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InvalidVerificationCode extends RuntimeException{
-    public InvalidVerificationCode(String message) {
+public class TokenExpiredException extends RuntimeException {
+    public TokenExpiredException(String message) {
         super(message);
     }
 }

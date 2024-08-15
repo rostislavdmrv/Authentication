@@ -1,5 +1,5 @@
 package com.tinqinacademy.authentication.core.processor;
-import com.tinqinacademy.authentication.api.exceptions.InvalidVerificationCode;
+import com.tinqinacademy.authentication.api.exceptions.InvalidVerificationCodeException;
 import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.exceptions.ResourceNotFoundException;
 import com.tinqinacademy.authentication.api.models.errors.ErrorWrapper;
@@ -41,7 +41,7 @@ public class ConfirmRegistrationOperationProcessor extends BaseOperationProcesso
                     log.info("Start confirm registration input: {}", input);
 
                     VerificationCode verificationCode = verificationCodeRepository.findFirstByConfirmationCodeOrderByCreatedAtDesc(input.getConfirmationCode())
-                            .orElseThrow(() -> new InvalidVerificationCode(Messages.INVALID_VERIFICATION_CODE));
+                            .orElseThrow(() -> new InvalidVerificationCodeException(Messages.INVALID_VERIFICATION_CODE));
 
                     UUID userId = verificationCode.getUserId();
                     verificationCodeRepository.delete(verificationCode);

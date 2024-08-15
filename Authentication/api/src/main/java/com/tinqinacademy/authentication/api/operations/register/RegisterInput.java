@@ -1,12 +1,15 @@
 package com.tinqinacademy.authentication.api.operations.register;
 
 import com.tinqinacademy.authentication.api.base.OperationInput;
+import com.tinqinacademy.authentication.api.validations.dateofbirth.DateOfBirthValidation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -46,4 +49,9 @@ public class RegisterInput implements OperationInput {
             message = "Phone number must start with a '+' followed by the country code and subscriber number digits")
     @Schema(example = "+359895713426")
     private String phoneNumber;
+
+
+    @DateOfBirthValidation
+    @Schema(example = "1999-08-01")
+    private LocalDate dateOfBirth;
 }

@@ -1,5 +1,7 @@
 package com.tinqinacademy.authentication.core.processor;
 
+import com.tinqinacademy.authentication.api.exceptions.TokenExpiredException;
+import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.models.errors.ErrorWrapper;
 import com.tinqinacademy.authentication.api.operations.register.RegisterOutput;
 import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtInput;
@@ -8,6 +10,8 @@ import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtOu
 import com.tinqinacademy.authentication.core.errorhandler.ErrorHandler;
 import com.tinqinacademy.authentication.core.processor.base.BaseOperationProcessor;
 import com.tinqinacademy.authentication.core.security.JwtProvider;
+import com.tinqinacademy.authentication.persistence.models.entities.BlacklistedToken;
+import com.tinqinacademy.authentication.persistence.repositories.BlacklistedTokenRepository;
 import org.springframework.security.core.userdetails.User;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
@@ -23,11 +27,13 @@ public class ValidateJwtOperationProcessor extends BaseOperationProcessor<Valida
 
     private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
+    private final BlacklistedTokenRepository blacklistedTokenRepository;
 
-    protected ValidateJwtOperationProcessor(ConversionService conversionService, Validator validator, ErrorHandler errorHandler, JwtProvider jwtProvider, UserDetailsService userDetailsService) {
+    protected ValidateJwtOperationProcessor(ConversionService conversionService, Validator validator, ErrorHandler errorHandler, JwtProvider jwtProvider, UserDetailsService userDetailsService, BlacklistedTokenRepository blacklistedTokenRepository) {
         super(conversionService, validator, errorHandler);
         this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
+        this.blacklistedTokenRepository = blacklistedTokenRepository;
     }
 
     @Override
@@ -35,6 +41,8 @@ public class ValidateJwtOperationProcessor extends BaseOperationProcessor<Valida
         return Try.of(() -> {
                     validateInput(input);
                     log.info("Start validate token input: {}", input);
+
+                    checkForInvalidAuthorizationHeader(input.getAuthorizationHeader());
 
                     String username = jwtProvider.getUsernameFromToken(input.getAuthorizationHeader());
 
@@ -47,6 +55,13 @@ public class ValidateJwtOperationProcessor extends BaseOperationProcessor<Valida
                 })
                 .toEither()
                 .mapLeft(errorHandler::handleErrors);
+    }
+
+    private void checkForInvalidAuthorizationHeader(String token) {
+        boolean isTokenInvalidated = blacklistedTokenRepository.existsByToken(token);
+        if (isTokenInvalidated) {
+            throw new TokenExpiredException(Messages.TOKEN_EXPIRED);
+        }
     }
 
     private ValidateJwtOutput createOutput(User userDetails) {
