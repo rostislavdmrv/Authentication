@@ -1,6 +1,5 @@
 package com.tinqinacademy.authentication.rest.controllers;
 
-import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordInput;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordOperation;
 import com.tinqinacademy.authentication.api.operations.changepasswordusingrecoverycode.ChangePasswordUsingRecoveryCodeInput;
@@ -27,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +51,7 @@ public class AuthenticationController extends BaseController {
 
 
     @Operation(
-            summary = "User Login",
+            summary = "User Log in",
             description = "Handles user login by processing the provided login credentials. On success, a new user session is created."
     )
     @ApiResponses(value = {
@@ -159,11 +159,11 @@ public class AuthenticationController extends BaseController {
             @ApiResponse( responseCode = "400",description = "Invalid token")
     })
     @PostMapping(RestApiRoutes.VALIDATE_TOKEN)
-    public ResponseEntity<?> validateToken(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        //String authHeaderToken = authHeader.replace("Bearer ", "");
+    public ResponseEntity<?> validateToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false,defaultValue = "") String authorizationHeader) {
+        String authHeaderToken = authorizationHeader.replace("Bearer ", "");
 
         ValidateJwtInput input = ValidateJwtInput.builder()
-                .authorizationHeader(authHeader)
+                .authorizationHeader(authHeaderToken)
                 .build();
 
 
@@ -207,14 +207,14 @@ public class AuthenticationController extends BaseController {
     }
 
     @Operation(
-            summary = "Logs out a user",
+            summary = "User Log out",
             description = "Logs out a user and invalidates jwt"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Invalidates jwt and logs out"),
             @ApiResponse(responseCode = "401",description = "Not authorized")
     })
-    //@SecurityRequirement(name = "bearerAuth")
+
     @PostMapping(RestApiRoutes.LOGOUT)
     public ResponseEntity<?> logout() {
 

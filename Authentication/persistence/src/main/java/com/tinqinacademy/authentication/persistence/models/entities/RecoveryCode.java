@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Table(name = "recovery_codes")
 public class RecoveryCode extends BaseEntity {
 
-    @Column(name = "confirmation_code", nullable = false)
+    @Column(name = "recovery_otp", nullable = false,length = 32)
     private String otp;
 
     @Column(name = "user_id", nullable = false)

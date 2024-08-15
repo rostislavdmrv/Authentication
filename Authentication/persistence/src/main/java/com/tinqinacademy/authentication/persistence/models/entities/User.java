@@ -1,17 +1,14 @@
 package com.tinqinacademy.authentication.persistence.models.entities;
 
 import com.tinqinacademy.authentication.persistence.models.entities.base.BaseEntity;
-import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Getter
 @Setter

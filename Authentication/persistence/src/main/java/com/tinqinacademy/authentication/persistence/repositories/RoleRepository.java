@@ -4,7 +4,6 @@ import com.tinqinacademy.authentication.persistence.models.entities.Role;
 import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 import java.util.UUID;
 
