@@ -31,6 +31,10 @@ public class ErrorHandler {
                 Case($(instanceOf(EmailNotConfirmedException.class)), ex -> handleEmailNotConfirmedException((EmailNotConfirmedException) ex, errors)),
                 Case($(instanceOf(InvalidCredentialsException.class)), ex -> handleInvalidCredentialsException((InvalidCredentialsException) ex, errors)),
                 Case($(instanceOf(UnknownRoleException.class)), ex -> handleUnknownRoleException((UnknownRoleException) ex, errors)),
+                Case($(instanceOf(TokenExpiredException.class)), ex -> handleTokenExpiredException((TokenExpiredException) ex, errors)),
+                Case($(instanceOf(InvalidRecoveryCodeException.class)), ex -> handleInvalidRecoveryCodeException((InvalidRecoveryCodeException) ex, errors)),
+                Case($(instanceOf(NoRecoveryRequestFoundException.class)), ex -> handleNoRecoveryRequestFoundException((NoRecoveryRequestFoundException) ex, errors)),
+                Case($(instanceOf(InvalidVerificationCodeException.class)), ex -> handleInvalidVerificationCodeException((InvalidVerificationCodeException) ex, errors)),
                 Case($(), ex -> handleGenericException(ex, errors))
         );
     }
@@ -73,6 +77,29 @@ public class ErrorHandler {
     private HttpStatus handleUnknownRoleException(UnknownRoleException ex, List<ErrorsResponse> errors) {
         errors.add(createErrorResponse(null, ex.getMessage()));
         return HttpStatus.FORBIDDEN;
+    }
+
+    private HttpStatus handleTokenExpiredException(TokenExpiredException ex, List<ErrorsResponse> errors) {
+        errors.add(createErrorResponse(null, ex.getMessage()));
+        return HttpStatus.UNAUTHORIZED;
+    }
+
+
+    private HttpStatus handleInvalidRecoveryCodeException(InvalidRecoveryCodeException ex, List<ErrorsResponse> errors) {
+        errors.add(createErrorResponse(null, ex.getMessage()));
+        return HttpStatus.BAD_REQUEST;
+    }
+
+
+    private HttpStatus handleNoRecoveryRequestFoundException(NoRecoveryRequestFoundException ex, List<ErrorsResponse> errors) {
+        errors.add(createErrorResponse(null, ex.getMessage()));
+        return HttpStatus.NOT_FOUND;
+    }
+
+
+    private HttpStatus handleInvalidVerificationCodeException(InvalidVerificationCodeException ex, List<ErrorsResponse> errors) {
+        errors.add(createErrorResponse(null, ex.getMessage()));
+        return HttpStatus.BAD_REQUEST;
     }
 
     private ErrorsResponse createErrorResponse(String field, String message) {
