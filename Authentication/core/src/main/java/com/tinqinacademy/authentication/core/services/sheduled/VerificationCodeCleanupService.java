@@ -1,4 +1,4 @@
-package com.tinqinacademy.authentication.core.services;
+package com.tinqinacademy.authentication.core.services.sheduled;
 
 import com.tinqinacademy.authentication.persistence.repositories.VerificationCodeRepository;
 import jakarta.transaction.Transactional;

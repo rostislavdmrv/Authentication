@@ -9,7 +9,7 @@ import com.tinqinacademy.authentication.api.operations.register.RegisterOperatio
 import com.tinqinacademy.authentication.api.operations.register.RegisterOutput;
 import com.tinqinacademy.authentication.core.errorhandler.ErrorHandler;
 import com.tinqinacademy.authentication.core.processor.base.BaseOperationProcessor;
-import com.tinqinacademy.authentication.core.services.EmailConfirmationService;
+import com.tinqinacademy.authentication.core.services.mails.EmailConfirmationService;
 import com.tinqinacademy.authentication.persistence.models.entities.Role;
 import com.tinqinacademy.authentication.persistence.models.entities.User;
 import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
@@ -101,7 +101,7 @@ public class RegisterOperationProcessor extends BaseOperationProcessor<RegisterI
         User user = conversionService.convert(input, User.class);
         user.setPassword(securePasswordHash);
         Role userRole = roleRepository.findByType(RoleType.USER)
-                .orElseThrow(() -> new UnknownRoleException(String.format(Messages.UNKNOWN_ROLE, RoleType.USER)));
+                .orElseThrow(() -> new UnknownRoleException(RoleType.USER.toString()));
         user.setRoles(new ArrayList<>());
         user.getRoles().add(userRole);
         user.setIsVerified(Boolean.FALSE);

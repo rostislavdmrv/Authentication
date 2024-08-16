@@ -18,6 +18,7 @@ public class RegisterInputToUserConverters implements Converter<RegisterInput, U
                 .lastName(source.getLastName())
                 .username(source.getUsername())
                 .phoneNumber(source.getPhoneNumber())
+                .dateOfBirth(source.getDateOfBirth())
                 .build();
         log.info("End convert RegisterInput to User");
         return user;
