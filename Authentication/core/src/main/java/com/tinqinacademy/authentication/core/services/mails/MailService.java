@@ -1,4 +1,4 @@
-package com.tinqinacademy.authentication.core.services;
+package com.tinqinacademy.authentication.core.services.mails;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

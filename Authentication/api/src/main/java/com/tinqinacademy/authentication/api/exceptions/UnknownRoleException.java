@@ -1,12 +1,15 @@
 package com.tinqinacademy.authentication.api.exceptions;
 
+import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public class UnknownRoleException extends RuntimeException{
-    public UnknownRoleException(String message) {
-        super(message);
+
+    private String roleType;
+
+    public UnknownRoleException(String roleType) {
+        super(String.format(Messages.UNKNOWN_ROLE, roleType));
+        this.roleType = roleType;
     }
 }

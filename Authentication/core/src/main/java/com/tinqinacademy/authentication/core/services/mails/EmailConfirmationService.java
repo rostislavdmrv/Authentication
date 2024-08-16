@@ -1,4 +1,4 @@
-package com.tinqinacademy.authentication.core.services;
+package com.tinqinacademy.authentication.core.services.mails;
 
 import com.tinqinacademy.authentication.persistence.models.entities.User;
 import com.tinqinacademy.authentication.persistence.models.entities.VerificationCode;
