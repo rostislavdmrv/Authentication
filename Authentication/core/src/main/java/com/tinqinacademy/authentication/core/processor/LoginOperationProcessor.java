@@ -12,7 +12,7 @@ import com.tinqinacademy.authentication.core.processor.base.BaseOperationProcess
 import com.tinqinacademy.authentication.core.security.JwtProvider;
 import com.tinqinacademy.authentication.persistence.models.entities.Role;
 import com.tinqinacademy.authentication.persistence.models.entities.User;
-import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
+import com.tinqinacademy.authentication.api.models.enums.RoleType;
 import com.tinqinacademy.authentication.persistence.repositories.UserRepository;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
