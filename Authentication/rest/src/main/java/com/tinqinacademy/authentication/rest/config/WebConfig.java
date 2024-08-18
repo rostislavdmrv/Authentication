@@ -20,6 +20,6 @@ public class WebConfig  implements WebMvcConfigurer {
     }
 
     private String[] securedEndpoints() {
-        return new String[]{RestApiRoutes.PROMOTE};
+        return new String[]{RestApiRoutes.PROMOTE, RestApiRoutes.DEMOTE,RestApiRoutes.LOGOUT,RestApiRoutes.CHANGE_PASSWORD};
     }
 }

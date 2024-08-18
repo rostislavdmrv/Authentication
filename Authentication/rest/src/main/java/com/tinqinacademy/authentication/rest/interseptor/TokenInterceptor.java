@@ -43,7 +43,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         try {
             String token = extractToken(authHeaderValue);
             jwtProvider.validate(token);
-            populateTokenContext(token);
+            createTokenContext(token);
         } catch (JwtException e) {
             buildErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             return false;
@@ -56,7 +56,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         return authHeaderValue.substring(Constants.BEARER_PREFIX.length());
     }
 
-    private void populateTokenContext(String token) {
+    private void createTokenContext(String token) {
         String username = jwtProvider.getUsernameFromToken(token);
         List<RoleType> roles = jwtProvider.getRolesFromToken(token);
         Date expirationTime = jwtProvider.getExpirationTimeFromToken(token);
@@ -69,7 +69,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         contextToken.setUsername(username);
         contextToken.setRoles(rolesAsStrings);
         contextToken.setExpirationTime(expirationTime);
-        log.info("Populated token wrapper: {}", contextToken);
+        log.info("Created token wrapper: {}", contextToken);
     }
 
     private void buildErrorResponse(HttpServletResponse response, int status, String message) {
