@@ -1,7 +1,7 @@
 package com.tinqinacademy.authentication.core.security;
 import com.tinqinacademy.authentication.api.exceptions.TokenExpiredException;
 import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
-import com.tinqinacademy.authentication.persistence.models.enums.RoleType;
+import com.tinqinacademy.authentication.api.models.enums.RoleType;
 import com.tinqinacademy.authentication.persistence.repositories.BlacklistedTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -46,13 +46,9 @@ public class JwtProvider {
 
     public List<RoleType> getRolesFromToken(String token) {
         List<String> rolesAsString = extractClaims(token).get("roles", ArrayList.class);
-        List<RoleType> roles = new ArrayList<>();
-
-        for (String role : rolesAsString) {
-            roles.add(RoleType.valueOf(role));
-        }
-
-        return roles;
+        return rolesAsString.stream()
+                .map(RoleType::valueOf)
+                .toList();
     }
 
     public Date getExpirationTimeFromToken(String token) {
