@@ -182,7 +182,7 @@ public class AuthenticationController extends BaseController {
             @ApiResponse(responseCode = "404", description = "Not Found: The user to be promoted was not found."),
             @ApiResponse(responseCode = "403", description = "Forbidden: The user does not have permission to perform the promotion.")
     })
-    @SecurityRequirement(name = "bearerAuth")
+
     @PostMapping(RestApiRoutes.PROMOTE)
     public ResponseEntity<?> promote(@RequestBody PromoteInput input) {
 

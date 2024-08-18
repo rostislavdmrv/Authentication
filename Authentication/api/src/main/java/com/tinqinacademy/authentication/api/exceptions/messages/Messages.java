@@ -14,6 +14,8 @@ public class Messages {
     public static final String INVALID_VERIFICATION_CODE = "Invalid verification code!";
     public static final String TOKEN_EXPIRED = "JWT is expired!";
     public static final String NO_PERMISSION = "You do not have the necessary permissions to perform this action!";
-    public static final String SELF_PROMOTE = "Cannot promote yourself";
-    public static final String EMPTY_TOKEN = "JWT token is missing";
+    public static final String SELF_PROMOTE = "Cannot promote yourself!";
+    public static final String EMPTY_TOKEN = "JWT token is missing!";
+    public static final String SELF_DEMOTE= "Can't demote yourself!";
+    public static final String LAST_ADMIN = "Can't demote last admin!";
 }
