@@ -7,20 +7,25 @@ import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.models.enums.RoleType;
 import com.tinqinacademy.authentication.api.models.errors.ErrorWrapper;
 import com.tinqinacademy.authentication.api.models.errors.ErrorsResponse;
+import com.tinqinacademy.authentication.api.restapiroutes.RestApiRoutes;
 import com.tinqinacademy.authentication.core.security.JwtProvider;
+import com.tinqinacademy.authentication.persistence.models.entities.User;
+import com.tinqinacademy.authentication.persistence.repositories.UserRepository;
 import com.tinqinacademy.authentication.rest.context.ContextToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
 
 @Component
 @Slf4j
@@ -97,4 +102,6 @@ public class TokenInterceptor implements HandlerInterceptor {
                 .errorHttpStatus(statusCode)
                 .build();
     }
+    
+
 }
