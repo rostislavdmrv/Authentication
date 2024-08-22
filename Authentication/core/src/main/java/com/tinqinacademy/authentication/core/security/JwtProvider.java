@@ -2,7 +2,10 @@ package com.tinqinacademy.authentication.core.security;
 import com.tinqinacademy.authentication.api.exceptions.TokenExpiredException;
 import com.tinqinacademy.authentication.api.exceptions.messages.Messages;
 import com.tinqinacademy.authentication.api.models.enums.RoleType;
+import com.tinqinacademy.authentication.persistence.models.entities.Role;
+import com.tinqinacademy.authentication.persistence.models.entities.User;
 import com.tinqinacademy.authentication.persistence.repositories.BlacklistedTokenRepository;
+import com.tinqinacademy.authentication.persistence.repositories.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,9 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.security.Key;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service

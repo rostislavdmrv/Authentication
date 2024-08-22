@@ -1,5 +1,7 @@
 package com.tinqinacademy.authentication.rest.controllers;
 
+import com.tinqinacademy.authentication.api.models.enums.RoleType;
+import com.tinqinacademy.authentication.api.models.usertoken.UserToken;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordInput;
 import com.tinqinacademy.authentication.api.operations.changepassword.ChangePasswordOperation;
 import com.tinqinacademy.authentication.api.operations.changepasswordusingrecoverycode.ChangePasswordUsingRecoveryCodeInput;
@@ -21,11 +23,13 @@ import com.tinqinacademy.authentication.api.operations.register.RegisterOperatio
 import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtInput;
 import com.tinqinacademy.authentication.api.operations.validatejwt.ValidateJwtOperation;
 import com.tinqinacademy.authentication.api.restapiroutes.RestApiRoutes;
+import com.tinqinacademy.authentication.rest.context.ContextToken;
 import com.tinqinacademy.authentication.rest.controllers.base.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,8 +39,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class AuthenticationController extends BaseController {
 
     private final LogInOperation loginOperation;
@@ -49,6 +56,7 @@ public class AuthenticationController extends BaseController {
     private final DemoteOperation demoteOperation;
     private final ValidateJwtOperation validateJwtOperation;
     private final LogoutOperation logoutOperation;
+    private final ContextToken contextToken;
 
 
     @Operation(
@@ -63,6 +71,7 @@ public class AuthenticationController extends BaseController {
     })
     @PostMapping(RestApiRoutes.LOGIN)
     public ResponseEntity<?> logIn(@RequestBody LogInInput input) {
+
 
         return handleWithJwt(loginOperation.process(input));
     }
@@ -186,6 +195,14 @@ public class AuthenticationController extends BaseController {
     @PostMapping(RestApiRoutes.PROMOTE)
     public ResponseEntity<?> promote(@RequestBody PromoteInput input) {
 
+//        System.out.println(contextToken);
+//        PromoteInput build = PromoteInput
+//                .builder()
+//                .userId(contextToken.getUsername())
+////                .userToken(contextToken.getToken())
+//                .build();
+        input.setUserToken(buildTokenInput());
+
         return handleWithStatus(promoteOperation.process(input), HttpStatus.CREATED);
     }
 
@@ -204,6 +221,7 @@ public class AuthenticationController extends BaseController {
     })
     @PostMapping(RestApiRoutes.DEMOTE)
     public ResponseEntity<?> demote(@RequestBody DemoteInput input) {
+        input.setUserToken(buildTokenInput());
 
         return handleWithStatus(demoteOperation.process(input), HttpStatus.CREATED);
     }
@@ -220,8 +238,26 @@ public class AuthenticationController extends BaseController {
     @PostMapping(RestApiRoutes.LOGOUT)
     public ResponseEntity<?> logout() {
 
-        return handleWithStatus(logoutOperation.process(LogoutInput.builder().build()), HttpStatus.OK);
+        LogoutInput input = LogoutInput.builder()
+                .userToken(buildTokenInput())
+                    .build();
+
+        return handleWithStatus(logoutOperation.process(input), HttpStatus.OK);
     }
+
+
+    private UserToken buildTokenInput() {
+        List<RoleType> roles = contextToken.getRoles().stream()
+                .map(RoleType::valueOf)
+                .toList();
+        return UserToken.builder()
+                .token(contextToken.getToken())
+                .username(contextToken.getUsername())
+                .roles(roles)
+                .expiration(contextToken.getExpirationTime())
+                .build();
+    }
+
 
 
 
